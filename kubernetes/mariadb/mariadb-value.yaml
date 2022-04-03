@@ -1,0 +1,26 @@
+architecture: replication
+auth:
+  database: url-db
+  rootPassword: secret
+  username: url
+  password: secret
+
+initdbScripts:
+  init.sql: |
+    SET GLOBAL time_zone = 'Asia/Taipei';
+    CREATE TABLE urls (
+      `id` varchar(12) primary key,
+      `long_url` text,
+      `expiration_date` datetime
+    );
+
+primary:
+  persistence:
+    enable: true
+    storageClass: hostpath
+
+secondary:
+  replicaCount: 2
+  persistence:
+    enable: true
+    storageClass: hostpath
