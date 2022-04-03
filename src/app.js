@@ -8,29 +8,9 @@ const app = express();
 
 const port = 3000;
 
-const options = {
-	definition: {
-		openapi: "3.0.0",
-		info: {
-			title: "Petstore API",
-			version: "1.0.0",
-			description: "A simple express urlshortener API",
-		},
-		servers: [
-			{
-				url: "http://localhost:3000",
-			},
-		],
-	},
-	apis: ["./openapi.yaml"],
-};
-
-const swaggerSpec = swaggerJsdoc(options);
-
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
 app.use("/", apiRouter);
 
