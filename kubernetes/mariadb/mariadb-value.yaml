@@ -17,10 +17,10 @@ initdbScripts:
 primary:
   persistence:
     enable: true
-    storageClass: hostpath
+    size: 10Gi
 
 secondary:
   replicaCount: 2
   persistence:
     enable: true
-    storageClass: hostpath
+    size: 10Gi

@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: url-deployment
+  labels:
+    app: url-api
+spec:
+  selector:
+    matchLabels:
+      app: url-api
+  replicas: 3
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: url-api
+    spec:
+      containers:
+      - name: url-api
+        image: chillmelon/urlshortener:1.0
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
+        env:
+        - name: DB_HOST
+          value: mariadb-primary.default.svc.cluster.local
+        - name: DB_USER
+          value: url
+        - name: DB_PASSWORD
+          value: secret
+        - name: DB_DATABASE
+          value: url-db
+        - name: MY_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        ports:
+        - containerPort: 3000
+      restartPolicy: Always

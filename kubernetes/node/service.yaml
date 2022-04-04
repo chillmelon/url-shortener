@@ -1,0 +1,16 @@
+# https://kubernetes.io/docs/concepts/services-networking/service/
+apiVersion: v1
+kind: Service
+metadata:
+  name: url-service
+  labels:
+    app: url-api
+spec:
+  type: LoadBalancer
+  selector:
+    app: url-api
+  ports:
+  - name: http
+    protocol: TCP
+    port: 3000
+    targetPort: 3000
