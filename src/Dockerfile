@@ -1,6 +1,7 @@
-FROM node:15.7.0-alpine3.10
-
-COPY . /src
-WORKDIR /src
+FROM node:17-alpine3.14
+COPY package.json package.json
 RUN npm install
+
+COPY . .
+EXPOSE 3000
 CMD ["npm", "start"]

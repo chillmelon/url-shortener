@@ -1,11 +1,12 @@
 import express from "express";
-import urlRoutes from "./urlRoutes.js";
+import urlRouter from "./urlRouter.js";
+
 const api = express.Router();
 
-api.get("/", (req, res) => {
+api.get("/", (_req, res) => {
 	res.send("welcome to url shortener");
 });
 
-api.use("/url", urlRoutes);
+api.use("/url", urlRouter);
 
 export default api;

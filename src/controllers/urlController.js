@@ -1,56 +1,80 @@
-import Url from "../models/url.js";
 import moment from "moment";
-import nanoid from "./idController.js";
+import nanoid from "../helper/nanoid.js";
+import Url from "../models/url.js";
 
 const urlController = {
-
-	async test(req, res) {
+	async test(_req, res) {
 		try {
 			let result = await Url.test();
 			if (result) {
 				res.status(200).json(result);
 			}
 		} catch (err) {
-			throw err;
+			console.error(err);
+			return res.status(500).json("Something went wrong.");
 		}
 	},
-
 
 	async get(req, res) {
 		const short_id = req.params.short_id;
-		let result = await Url.get(short_id);
-		console.log(result);
-		if (!result[0]?.long_url) {
-			return res.status(404).send("Url not found.");
+
+		try {
+			let result = await Url.get(short_id);
+
+			// if no result, return 404
+			if (!result[0]?.long_url) {
+				console.error(result);
+				return res.status(404).send("Url not found.");
+			}
+
+			// redirect to long_url
+			let long_url = result[0].long_url;
+			return res.redirect(301, long_url);
+		} catch (error) {
+			console.error(err);
+			return res.status(500).json("Something went wrong.");
 		}
-		return res.status(200).json(result[0]);
 	},
 
-
 	async create(req, res) {
-
 		const long_url = req.body.long_url;
-		const short_id = nanoid();
-		const expiration_date = moment(req.body.expiration_date)
-														.local()
-														.format('YYYY-MM-DD HH:mm:ss');
 
-		const new_url = {
-			short_id: short_id,
+		// format datetime
+		const expiration_date = moment(req.body.expiration_date).local().format("YYYY-MM-DD HH:mm:ss");
+
+		let new_url = {
 			long_url: long_url,
 			expiration_date: expiration_date,
 		};
 
-		let result = await Url.create(new_url);
+		let retry = 0;
 
-		if (result.affectedRows > 0) {
-			return res.status(200).json(short_id);
-		} else {
-			return res.status(500).json("something went wrong.");
+		// try 3 times, return 500 at the 3rd time.
+		while (retry < 3) {
+			retry++;
+
+			new_url.short_id = nanoid();
+
+			try {
+				let result = await Url.create(new_url);
+
+				if (result.affectedRows > 0) {
+					return res.status(200).json(new_url.short_id);
+				}
+			} catch (err) {
+				// if duplicate, try again
+				if (err.code == "ER_DUP_ENTRY" && retry < 3) {
+					console.error("duplicate id");
+					continue;
+
+					// if other error, return 500
+				} else {
+					console.error(err);
+					return res.status(500).json("Something went wrong.");
+				}
+			}
 		}
-
 	},
-
 };
 
 export default urlController;

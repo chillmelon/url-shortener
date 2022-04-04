@@ -1,5 +1,5 @@
-import dbConfig from "../config/dbConfig.js";
 import mariadb from "mariadb";
+import dbConfig from "../config/dbConfig.js";
 
 const pool = mariadb.createPool({
 	host: dbConfig.host,

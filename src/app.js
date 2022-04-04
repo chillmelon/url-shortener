@@ -1,8 +1,6 @@
 import express from "express";
-import apiRouter from "./routes/index.js";
-import swaggerJsdoc from "swagger-jsdoc";
-import swaggerUI from "swagger-ui-express";
 import cors from "cors";
+import apiRouter from "./routes/index.js";
 
 const app = express();
 
@@ -14,7 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/", apiRouter);
 
-app.use((req, res) => {
+app.use((_req, res) => {
 	res.status(404).send("Unknown request");
 });
 
