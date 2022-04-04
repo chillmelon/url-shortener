@@ -24,3 +24,7 @@ secondary:
   persistence:
     enable: true
     size: 10Gi
+
+extraEnvVars:
+  - name: TZ
+    value: "Asia/Taipei"

@@ -1,5 +1,5 @@
-import moment from "moment";
 import nanoid from "../helper/nanoid.js";
+import { validationResult } from "express-validator";
 import Url from "../models/url.js";
 
 const urlController = {
@@ -30,17 +30,20 @@ const urlController = {
 			// redirect to long_url
 			let long_url = result[0].long_url;
 			return res.redirect(301, long_url);
-		} catch (error) {
+		} catch (err) {
 			console.error(err);
 			return res.status(500).json("Something went wrong.");
 		}
 	},
 
 	async create(req, res) {
-		const long_url = req.body.long_url;
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			return res.status(400).send(errors);
+		}
 
-		// format datetime
-		const expiration_date = moment(req.body.expiration_date).local().format("YYYY-MM-DD HH:mm:ss");
+		const long_url = req.body.url;
+		const expiration_date  = req.body.expiration_date;
 
 		let new_url = {
 			long_url: long_url,

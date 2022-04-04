@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: url-api
-        image: chillmelon/urlshortener:1.0
+        image: chillmelon/urlshortener:1.7
         imagePullPolicy: Always
         resources:
           requests:

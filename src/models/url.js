@@ -9,7 +9,7 @@ const Url = {
 
 	// get long_url from db by giving short_id
 	async get(short_id) {
-		const sql = "SELECT * FROM urls WHERE id = ? AND WHERE expiration_date > NOW();";
+		const sql = "SELECT * FROM urls WHERE id = ? AND expiration_date > NOW()";
 
 		return db.pool.query(sql, short_id);
 	},
