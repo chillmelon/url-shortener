@@ -23,9 +23,9 @@ cd url-shortener
 ### b. Kubernetes
 1. 安裝 helm
 	https://helm.sh/docs/intro/install/
-1. 用 helm 啟動 mariadb
+1. 用 helm 啟動 mariadb-galera
 	```
-	helm install mariadb -f ./kubernetes/mariadb/mariadb-value.yaml bitnami/mariadb
+	helm install mariadb ./kubernetes/mariadb-galera/
 	```
 1. 編輯 ./kubernetes/node/deployment.yaml，主要是 baseUrl 要設定
 1. 啟動 node.js API 服務
@@ -59,6 +59,9 @@ cd url-shortener
 ### 架構相關
 Url Service 的部分，透過 Load Balancer 將服務平均導向 3 個 pods，以防塞車。
 
-DB 的部分，使用 bitnami 維護的 helm chart 搭配自訂的參數做使用，一個 master 兩個 slave 的架構，隨時保持 master 跟 slave 的資料同步，master 發生問題的時候，可以很快從 slave 生成一個新的 master，原本想用 MariaDB Galera Cluster，多個 master 的架構，可以達到多讀多寫，但是在使用 init.sql 檔案做資料庫初始化的時候，發生了會一直不斷初始化的 bug，時間不夠所以先回頭用 master slave 的架構。
+DB 的部分，使用 bitnami 維護的 mariadb-galera helm chart 搭配自訂的參數做使用，3 個 master node，可同時讀寫，在一個 node 失效時，另外兩個 node 可以繼續作業，防止 single point failure，缺點是新增 node 的時候速度偏慢，還有寫入時稍慢。
 
-![image](https://user-images.githubusercontent.com/43177690/161746301-95506a40-a898-4f3a-8f72-1b66d6755841.png)
+## Future Work
+加入 LRU 的 Memcached，新增或取用 url 的時候都新增到 cache 裡，很久沒用到的自然會被淘汰。
+
+![image](https://user-images.githubusercontent.com/43177690/161772381-317421f4-c918-4d3f-9bee-c82904457273.png)
