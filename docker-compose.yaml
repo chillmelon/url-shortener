@@ -1,0 +1,41 @@
+version: "3.8"
+
+networks:
+  url:
+    name: url
+
+services:
+  db:
+    image: mariadb:10.7-focal
+    container_name: ${DB_HOST}
+    restart: always
+    networks:
+      - url
+    ports:
+      - "127.0.0.1:3306:3306"
+    environment:
+      MARIADB_DATABASE: ${DB_DATABASE}
+      MARIADB_USER: ${DB_USER}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./database/db-data/:/var/lib/mysql:rw
+
+  api:
+    build: ./src
+    container_name: api
+    networks:
+      - url
+    ports:
+      - "3000:3000"
+    links:
+      - db:db
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DATABASE=${DB_DATABASE}
+    command: npm start
