@@ -62,7 +62,8 @@ Url Service 的部分，透過 Load Balancer 將服務平均導向 3 個 pods，
 
 DB 的部分，使用 bitnami 維護的 mariadb-galera helm chart 搭配自訂的參數做使用，3 個 master node，可同時讀寫，在一個 node 失效時，另外兩個 node 可以繼續作業，防止 single point failure，缺點是新增 node 的時候速度偏慢，還有寫入時稍慢。
 
+![image](https://user-images.githubusercontent.com/43177690/161772381-317421f4-c918-4d3f-9bee-c82904457273.png)
+
+
 ## Future Work
 加入 LRU 的 Memcached，新增或取用 url 的時候都新增到 cache 裡，很久沒用到的自然會被淘汰。
-
-![image](https://user-images.githubusercontent.com/43177690/161772381-317421f4-c918-4d3f-9bee-c82904457273.png)
