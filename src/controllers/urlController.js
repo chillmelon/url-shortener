@@ -1,6 +1,7 @@
 import nanoid from "../helper/nanoid.js";
 import { validationResult } from "express-validator";
 import Url from "../models/url.js";
+import { baseUrl } from "../config/urlConfig.js";
 
 const urlController = {
 	async test(_req, res) {
@@ -62,7 +63,12 @@ const urlController = {
 				let result = await Url.create(new_url);
 
 				if (result.affectedRows > 0) {
-					return res.status(200).json(new_url.short_id);
+					let shortId = newUrl.id
+					let data = {
+						id: new_url.short_id,
+						short_url: baseUrl + new_url.short_id,
+					}
+					return res.status(200).json(data);
 				}
 			} catch (err) {
 				// if duplicate, try again

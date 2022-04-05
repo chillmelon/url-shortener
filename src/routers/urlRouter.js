@@ -8,6 +8,6 @@ urlRouter.get("/test", url.test);
 
 urlRouter.get("/:short_id", url.get);
 
-urlRouter.post("/", urlValidator(), url.create);
+urlRouter.post("/api/v1/urls", urlValidator(), url.create);
 
 export default urlRouter;

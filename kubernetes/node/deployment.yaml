@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: url-api
-        image: chillmelon/urlshortener:1.7
+        image: chillmelon/urlshortener:1.8
         imagePullPolicy: Always
         resources:
           requests:
@@ -31,6 +31,8 @@ spec:
             cpu: 100m
             memory: 100Mi
         env:
+        - name: BASE_URL
+          value: http://url.amkongchiau.com/
         - name: DB_HOST
           value: mariadb-primary.default.svc.cluster.local
         - name: DB_USER
