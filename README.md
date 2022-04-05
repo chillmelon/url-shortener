@@ -1,5 +1,6 @@
 # Url Shortener
 [demo](http://url.amkongchiau.com/)
+已經 deploy 到線上環境，baseUrl 是 `http://url.amkongchiau.com/`，規格按照作業要求
 ## 啟動方式
 
 ### Clone 專案
@@ -34,11 +35,11 @@ cd url-shortener
 	```
 
 ## 思路
-- 這個專案是用個人比較熟悉的 node.js (Express.js) 做開發，搭配 MariaDB，部署在 k8s cluster
+- 這個專案是用個人比較熟悉的 node.js ( Express.js ) 做開發，搭配 MariaDB，部署在 k8s cluster
 - 主要功能如下
 	- 收到 POST /api/v1/urls
 		1. 檢查 body :
-			- url 是否真實存在 ( 完 url 需包含 protocol, domain, path )
+			- url 是否真實存在 ( 完整 url 需包含 protocol, domain, path )
 			- expiration_date 是否符合 ISO8601 格式
 		2. 生成一個 12 位的隨機 id
 		3. 將 id, url, expireAt 存入 DB
