@@ -49,7 +49,7 @@ cd url-shortener
 		2. 向 DB 查詢符合 id 且未過期的 record
 		3. 重新導向查到的 url
 
-## 3rd Party Library
+## 3rd Party Library and Database
 ### id 相關
 使用第三方的套件 nanoid，利用自訂的 alphbat 產生 12 碼的 id，在每秒 100 次請求的情況下，要大約 7 年才會有 1% 的機率生成 1 個重複的 id。
 
@@ -60,7 +60,7 @@ cd url-shortener
 ### 架構相關
 Url Service 的部分，透過 Load Balancer 將服務平均導向 3 個 pods，以防塞車。
 
-DB 的部分，使用 bitnami 維護的 mariadb-galera helm chart 搭配自訂的參數做使用，3 個 master node，可同時讀寫，在一個 node 失效時，另外兩個 node 可以繼續作業，防止 single point failure，缺點是新增 node 的時候速度偏慢，還有寫入時稍慢。
+DB 的部分，為了達到高可用性，並維持 ACID，選用了 MariaDB Galera Cluster，實作使用 bitnami 維護的 mariadb-galera helm chart 搭配自訂的參數做使用，配置 3 個 master node，可同時讀寫，在一個 node 失效時，另外兩個 node 可以繼續作業，防止 single point failure，缺點是新增 node 的時候速度偏慢，還有寫入時稍慢。
 
 ![image](https://user-images.githubusercontent.com/43177690/161772381-317421f4-c918-4d3f-9bee-c82904457273.png)
 
