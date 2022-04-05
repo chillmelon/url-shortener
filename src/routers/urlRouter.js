@@ -6,8 +6,9 @@ const urlRouter = express.Router();
 
 urlRouter.get("/test", url.test);
 
-urlRouter.get("/:short_id", url.get);
-
 urlRouter.post("/api/v1/urls", urlValidator(), url.create);
+
+urlRouter.get("/:id", url.get);
+
 
 export default urlRouter;

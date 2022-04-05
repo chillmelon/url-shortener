@@ -17,20 +17,19 @@ const urlController = {
 	},
 
 	async get(req, res) {
-		const short_id = req.params.short_id;
+		const id = req.params.id;
 
 		try {
-			let result = await Url.get(short_id);
+			let result = await Url.get(id);
 
 			// if no result, return 404
-			if (!result[0]?.long_url) {
-				console.error(result);
+			if (!result[0]?.url) {
 				return res.status(404).send("Url not found.");
 			}
 
-			// redirect to long_url
-			let long_url = result[0].long_url;
-			return res.redirect(301, long_url);
+			// redirect to origin url
+			let url = result[0].url;
+			return res.redirect(301, url);
 		} catch (err) {
 			console.error(err);
 			return res.status(500).json("Something went wrong.");
@@ -43,12 +42,12 @@ const urlController = {
 			return res.status(400).send(errors);
 		}
 
-		const long_url = req.body.url;
-		const expiration_date  = req.body.expiration_date;
+		const url = req.body.url;
+		const expireAt  = req.body.expireAt;
 
-		let new_url = {
-			long_url: long_url,
-			expiration_date: expiration_date,
+		let newUrl = {
+			url,
+			expireAt,
 		};
 
 		let retry = 0;
@@ -57,23 +56,29 @@ const urlController = {
 		while (retry < 3) {
 			retry++;
 
-			new_url.short_id = nanoid();
+			newUrl.id = nanoid();
 
 			try {
-				let result = await Url.create(new_url);
+				let result = await Url.create(newUrl);
 
+				// if success, return id and shortUrl
 				if (result.affectedRows > 0) {
-					let shortId = newUrl.id
+					let id = newUrl.id
+					let shortUrl = new URL(id, baseUrl);
+
 					let data = {
-						id: new_url.short_id,
-						short_url: baseUrl + new_url.short_id,
-					}
+						id,
+						shortUrl,
+					};
+
 					return res.status(200).json(data);
 				}
+
 			} catch (err) {
+
 				// if duplicate, try again
 				if (err.code == "ER_DUP_ENTRY" && retry < 3) {
-					console.error("duplicate id");
+					console.error("Duplicate id");
 					continue;
 
 					// if other error, return 500

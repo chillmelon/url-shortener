@@ -17,8 +17,8 @@ const urlValidator = (value) => {
 		).exists({ checkFalsy: true }).custom(urlExistSync),
 
 		body(
-			"expiration_date",
-			"expiration_date must be ISO8601 format."
+			"expireAt",
+			"expiration date must be ISO8601 format."
 		).exists({ checkFalsy: true }).isISO8601().customSanitizer(DateFormatter),
 	];
 };

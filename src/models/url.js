@@ -8,17 +8,17 @@ const Url = {
 	},
 
 	// get long_url from db by giving short_id
-	async get(short_id) {
-		const sql = "SELECT * FROM urls WHERE id = ? AND expiration_date > NOW()";
+	async get(id) {
+		const sql = "SELECT * FROM urls WHERE id = ? AND expireAt > NOW()";
 
-		return db.pool.query(sql, short_id);
+		return db.pool.query(sql, id);
 	},
 
 	// create a record with given long_url and expiration_date in db
 	async create(url) {
-		const sql = "INSERT INTO urls (id, long_url, expiration_date) values (?, ?, ?);";
+		const sql = "INSERT INTO urls (id, url, expireAt) values (?, ?, ?);";
 
-		return db.pool.query(sql, [url.short_id, url.long_url, url.expiration_date]);
+		return db.pool.query(sql, [url.id, url.url, url.expireAt]);
 	},
 };
 
