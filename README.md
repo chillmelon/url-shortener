@@ -3,10 +3,10 @@
 ## 啟動方式
 
 ### Clone 專案
-	```
-	git clone https://github.com/chillmelon/url-shortener.git
-	cd url-shortener
-	```
+```
+git clone https://github.com/chillmelon/url-shortener.git
+cd url-shortener
+```
 
 ### a. Docker
 1. Install Docker and Docker Compose
@@ -60,4 +60,6 @@
 Url Service 的部分，透過 Load Balancer 將服務平均導向 3 個 pods，以防塞車。
 
 DB 的部分，使用 bitnami 維護的 helm chart 搭配自訂的參數做使用，一個 master 兩個 slave 的架構，隨時保持 master 跟 slave 的資料同步，master 發生問題的時候，可以很快從 slave 生成一個新的 master，原本想用 MariaDB Galera Cluster，多個 master 的架構，可以達到多讀多寫，但是在使用 init.sql 檔案做資料庫初始化的時候，發生了會一直不斷初始化的 bug，時間不夠所以先回頭用 master slave 的架構。
-![[Pasted image 20220405163508.png]]
+
+![image](https://user-images.githubusercontent.com/43177690/161743242-815c0356-dcf9-43d7-af2d-532f487c30ec.png)
+
