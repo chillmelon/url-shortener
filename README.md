@@ -65,6 +65,7 @@ DB 的部分，為了達到高可用性，並維持 ACID，選用了 MariaDB Gal
 
 ![image](https://user-images.githubusercontent.com/43177690/161772381-317421f4-c918-4d3f-9bee-c82904457273.png)
 
+Domain 部分用 cloudflare 託管，可以擋掉一些 DDOS
 
 ## Future Work
 加入 LRU 的 Memcached，新增或取用 url 的時候都新增到 cache 裡，很久沒用到的自然會被淘汰。
